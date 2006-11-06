@@ -6,13 +6,13 @@ use warnings;
 use NEXT;
 use CGI::Untaint;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub prepare {
     my $class = shift;
     my $c = $class->NEXT::prepare( @_ );
 
-    $c->log->debug("Creating CGI::Untaint instance");
+    # $c->log->debug("Creating CGI::Untaint instance");
     my $untaint = CGI::Untaint->new( $c->req->parameters );
     $c->config->{__PACKAGE__}->{handler} = $untaint;
 
