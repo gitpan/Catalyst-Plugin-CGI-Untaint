@@ -15,6 +15,7 @@ sub prepare {
     # $c->log->debug("Creating CGI::Untaint instance");
     my $untaint = CGI::Untaint->new( $c->req->parameters );
     $c->config->{__PACKAGE__}->{handler} = $untaint;
+    $c->config->{__PACKAGE__}->{errors} = {};
 
     return $c;
 }
@@ -22,10 +23,16 @@ sub prepare {
 sub untaint {
     my ($c, @params) = @_;
 
-    if ($params[0] eq 'last_error') {
-        return $c->config->{__PACKAGE__}->{handler}->error;
+    if ($params[0] eq '-last_error') {
+        return $c->config->{__PACKAGE__}{error}{$params[1]};
     }
-    return $c->config->{__PACKAGE__}->{handler}->extract(@params);
+
+    my $value = $c->config->{__PACKAGE__}{handler}->extract(@params);
+
+    $c->config->{__PACKAGE__}{errors}{$params[1]} =
+        $c->config->{__PACKAGE__}{handler}->error;
+
+    return $value;
 }
 
 1;
@@ -44,7 +51,7 @@ Catalyst::Plugin::CGI::Untaint - Plugin for Catalyst
   my $email = $c->untaint(-as_email => 'email');
   # Will extract only a valid email address from $c->req->params->{email}
 
-  # Use -error to get the rejection reason:
+  # Use -last_error to get the rejection reason:
   if (not $email) {
       $error = $c->untaint(-last_error => 'email');
   }
@@ -60,9 +67,9 @@ For info on using CGI::Untaint, see its own documentation.
 
 =head1 SEE ALSO
 
-Catalyst
+L<Catalyst>
 
-CGI::Untaint
+L<CGI::Untaint>
 
 =head1 AUTHOR
 
