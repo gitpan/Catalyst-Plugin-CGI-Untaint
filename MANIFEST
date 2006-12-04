@@ -4,3 +4,4 @@ MANIFEST
 README
 t/Catalyst-Plugin-CGI-Untaint.t
 lib/Catalyst/Plugin/CGI/Untaint.pm
+META.yml                                 Module meta-data (added by MakeMaker)

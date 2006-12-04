@@ -6,7 +6,7 @@ use warnings;
 use NEXT;
 use CGI::Untaint;
 
-our $VERSION = '0.03';
+our $VERSION = '0.05';
 
 sub prepare {
     my $class = shift;
